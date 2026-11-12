@@ -1,7 +1,66 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" fill="#0F6A61"/>
-  <polygon points="96,400 416,400 416,300" fill="#E8D7B6"/>
-  <line x1="96" y1="410" x2="416" y2="410" stroke="#F5F2EC" stroke-width="10" stroke-linecap="round"/>
-  <circle cx="256" cy="118" r="36" fill="#F5F2EC"/>
-  <path d="M250 160 L244 262 M244 262 L286 316 L282 352 M244 262 L230 326 L236 372 M250 176 L300 224" fill="none" stroke="#F5F2EC" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#17A9BC"/>
+      <stop offset="0.5" stop-color="#11709A"/>
+      <stop offset="1" stop-color="#1A3C82"/>
+    </linearGradient>
+    <radialGradient id="disc" cx="0.45" cy="0.4" r="0.65">
+      <stop offset="0" stop-color="#17628A"/>
+      <stop offset="1" stop-color="#0D2F5E"/>
+    </radialGradient>
+    <linearGradient id="bone" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#B4FBF5"/>
+      <stop offset="0.6" stop-color="#55D6DA"/>
+      <stop offset="1" stop-color="#2AA9C2"/>
+    </linearGradient>
+    <linearGradient id="arrow" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#EE5F27"/>
+      <stop offset="1" stop-color="#FFA63C"/>
+    </linearGradient>
+    <radialGradient id="joint" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#E9FFFD" stop-opacity="0.85"/>
+      <stop offset="1" stop-color="#E9FFFD" stop-opacity="0"/>
+    </radialGradient>
+    <clipPath id="inside"><circle cx="500" cy="500" r="318"/></clipPath>
+    <linearGradient id="badge" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#38D3B0"/>
+      <stop offset="1" stop-color="#169B85"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+
+  <!-- dark disc + ring -->
+  <circle cx="500" cy="500" r="318" fill="url(#disc)"/>
+
+  <g clip-path="url(#inside)" stroke="#0A3F5E" stroke-width="12" stroke-linejoin="round" stroke-linecap="round">
+    <!-- femur -->
+    <path d="M250 160 L370 120 Q470 290 548 360 Q600 345 625 385 Q645 430 600 470 Q560 505 505 495 Q460 520 420 490 Q385 460 405 410 Q330 300 250 160 Z" fill="url(#bone)"/>
+    <!-- kneecap -->
+    <ellipse cx="655" cy="420" rx="46" ry="62" transform="rotate(-15 655 420)" fill="url(#bone)"/>
+    <!-- tibia -->
+    <path d="M410 540 Q470 515 555 525 Q600 535 595 575 Q585 615 545 630 L535 900 L455 900 L452 640 Q410 620 405 585 Q400 555 410 540 Z" fill="url(#bone)"/>
+    <!-- fibula -->
+    <path d="M592 600 Q620 595 625 625 L612 900 L578 900 L582 640 Q580 610 592 600 Z" fill="url(#bone)"/>
+  </g>
+  <g clip-path="url(#inside)" stroke="#0A3F5E" stroke-width="7" stroke-linecap="round" fill="none" opacity="0.5">
+    <path d="M300 170 Q400 330 480 420"/>
+    <path d="M495 660 L492 880"/>
+    <path d="M470 470 Q510 455 560 470"/>
+  </g>
+  <circle cx="510" cy="512" r="85" fill="url(#joint)"/>
+
+  <circle cx="500" cy="500" r="318" fill="none" stroke="#58DCDA" stroke-width="20"/>
+
+  <!-- progress arrow sweeping over the ring -->
+  <path d="M120 640 Q480 760 820 300" fill="none" stroke="#5A2208" stroke-opacity="0.35" stroke-width="66" stroke-linecap="round" transform="translate(0 12)"/>
+  <path d="M120 640 Q480 760 820 300" fill="none" stroke="url(#arrow)" stroke-width="60" stroke-linecap="round"/>
+  <polygon points="900,200 892,392 748,292" fill="#FFA63C" stroke="#FFA63C" stroke-width="20" stroke-linejoin="round"/>
+
+  <!-- check badge -->
+  <g transform="translate(838 838)">
+    <polygon points="0,-82 58,-58 82,0 58,58 0,82 -58,58 -82,0 -58,-58" fill="url(#badge)" stroke="#0E6E62" stroke-width="10" stroke-linejoin="round"/>
+    <polyline points="-36,2 -10,28 38,-24" fill="none" stroke="#123A4A" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
 </svg>

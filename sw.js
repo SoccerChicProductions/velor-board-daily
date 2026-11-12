@@ -1,5 +1,5 @@
 // Offline cache so the installed app opens without a connection.
-const CACHE = 'velor-daily-v2';
+const CACHE = 'velor-daily-v3';
 const FILES = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png'];
 
 self.addEventListener('install', (e) => {

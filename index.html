@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Velor Board Daily</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style id="css">
+:root{
+  --bg:#F5F2EC; --card:#FFFFFF; --ink:#1E2A2D; --muted:#69767A; --line:#E6E0D6;
+  --teal:#0F7A70; --teal-soft:#DDEFEC;
+  --c-calf:#0F7A70; --c-calf-soft:#DDEFEC;
+  --c-ham:#4F5BB5; --c-ham-soft:#E4E6F6;
+  --c-quad:#C27A12; --c-quad-soft:#F7EAD3;
+  --c-hip:#C8553D; --c-hip-soft:#F8E1DA;
+  --radius:18px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Figtree,system-ui,-apple-system,sans-serif}
+button,select,input,textarea{font:inherit;color:inherit}
+button{border:0;background:none;cursor:pointer;padding:0}
+.wrap{max-width:640px;margin:0 auto;padding:18px 16px 60px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px;margin-bottom:14px}
+.card h3{margin:0;font-size:17px;font-weight:800;letter-spacing:-.01em}
+.muted{color:var(--muted)}
+
+/* header */
+.top{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.top .ttl{flex:1;min-width:0}
+.top h1{font-size:23px;line-height:1.1;margin:0;font-weight:800;letter-spacing:-.02em}
+.top .sub{color:var(--muted);font-size:14px;margin-top:4px;font-weight:500}
+.ring{position:relative;width:64px;height:64px;flex:none}
+.ring svg{transform:rotate(-90deg)}
+.ring .num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;font-size:18px;line-height:1}
+.ring .num small{font-size:10px;color:var(--muted);font-weight:600;margin-top:2px}
+.iconbtn{width:40px;height:40px;border-radius:12px;background:var(--card);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;flex:none}
+
+.statrow{display:flex;gap:8px;margin-bottom:14px}
+.stat{flex:1;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 12px;text-align:left}
+.stat b{font-size:19px;font-weight:800;display:block}
+.stat span{font-size:11.5px;color:var(--muted);font-weight:600}
+
+.week{display:flex;gap:6px;margin-bottom:8px}
+.day{flex:1;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:8px 0 9px;display:flex;flex-direction:column;align-items:center;gap:3px}
+.day .dn{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.day .dd{font-size:16px;font-weight:800}
+.day .dot{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;background:#EFEBE3;color:var(--muted)}
+.day .dot.has{background:var(--teal);color:#fff}
+.day.sel{border-color:var(--ink);box-shadow:0 0 0 1.5px var(--ink) inset}
+.viewing{font-size:13px;color:var(--muted);margin:2px 2px 12px;min-height:18px;font-weight:500}
+.viewing button{color:var(--teal);font-weight:700;text-decoration:underline}
+
+/* plan */
+.plan{background:linear-gradient(160deg,#123F3B,#0F6A61);color:#fff;border:0}
+.plan .ph{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
+.plan .ph .grow{flex:1;min-width:0}
+.plan .eyebrow{font-size:11.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;opacity:.75}
+.plan h3{font-size:21px;margin-top:2px}
+.plan select{appearance:none;-webkit-appearance:none;background:rgba(255,255,255,.14) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5l3 3 3-3' fill='none' stroke='white' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 10px center;border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:10px;padding:7px 28px 7px 10px;font-size:13px;font-weight:700;max-width:100%;margin-top:8px}
+.plan select option{color:#1E2A2D}
+.prow{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.1);border-radius:14px;padding:6px 10px 6px 6px;margin-bottom:8px;width:100%;text-align:left}
+.prow .thumb{background:#F7F4EE}
+.prow .pt{flex:1;min-width:0}
+.prow .pt b{display:block;font-size:15px;font-weight:700}
+.prow .pt span{font-size:12px;opacity:.8}
+.prow.done .pt b{text-decoration:line-through;opacity:.75}
+.prow .pchk{width:26px;height:26px;border-radius:50%;border:2px solid rgba(255,255,255,.55);display:flex;align-items:center;justify-content:center;flex:none}
+.prow:not(.done) .pchk svg{opacity:0}
+.prow.done .pchk{background:#fff;border-color:#fff}
+.prow.done .pchk svg path{stroke:#0F6A61}
+.pbtns{display:flex;gap:8px;margin-top:4px}
+.btn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:13px;border-radius:14px;font-weight:800;font-size:15.5px}
+.btn.white{background:#fff;color:#0F4F49}
+.btn.ghost{background:rgba(255,255,255,.12);color:#fff;flex:0 0 auto;padding:13px 16px}
+.btn.dark{background:var(--ink);color:#fff}
+.btn.line{background:var(--card);border:1.5px solid var(--line)}
+
+/* knee check-in */
+.scale{display:flex;gap:6px;margin-top:10px}
+.scale button{flex:1;border-radius:12px;border:1.5px solid var(--line);background:#FBFAF7;padding:8px 0 7px;display:flex;flex-direction:column;align-items:center;gap:2px}
+.scale button b{font-size:18px;font-weight:800}
+.scale button span{font-size:10.5px;font-weight:700;color:var(--muted);line-height:1.1;text-align:center}
+.scale button.on{color:#fff;border-color:transparent}
+.scale button.on span{color:rgba(255,255,255,.9)}
+.note{width:100%;margin-top:10px;border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;font-size:15px;background:#FBFAF7;resize:none}
+.kh{display:flex;align-items:center;gap:8px}
+.kh .grow{flex:1}
+.link{color:var(--teal);font-weight:700;font-size:14px}
+
+/* groups */
+.group{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);margin-bottom:14px;overflow:hidden}
+.ghead{display:flex;align-items:center;gap:12px;padding:14px 14px;width:100%;text-align:left}
+.gbadge{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex:none}
+.gtitle{flex:1;min-width:0}
+.gtitle b{display:block;font-size:17px;font-weight:800;letter-spacing:-.01em}
+.gtitle span{font-size:12.5px;color:var(--muted);font-weight:600}
+.gcount{font-size:13px;font-weight:800;padding:4px 9px;border-radius:999px}
+.chev{transition:transform .2s;color:var(--muted)}
+.group.closed .chev{transform:rotate(-90deg)}
+.group.closed .rows{display:none}
+.bar{height:4px;background:#EFEBE3;margin:0 14px 12px;border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:4px;transition:width .3s}
+.secttl{font-size:12.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:22px 4px 10px;font-weight:800}
+
+.row{display:flex;align-items:center;gap:10px;padding:8px 12px 8px 10px;border-top:1px solid var(--line)}
+.chk{width:46px;height:46px;flex:none;display:flex;align-items:center;justify-content:center}
+.chk .box{width:28px;height:28px;border-radius:50%;border:2.5px solid #C9C2B5;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.chk .box svg{opacity:0;transform:scale(.5);transition:all .15s}
+.row.done .chk .box{border-color:var(--gc);background:var(--gc)}
+.row.done .chk .box svg{opacity:1;transform:none}
+.rmain{flex:1;min-width:0;display:flex;align-items:center;gap:10px;text-align:left;padding:2px 0}
+.thumb{width:62px;height:52px;border-radius:10px;background:#F7F4EE;flex:none;overflow:hidden}
+.thumb svg{width:100%;height:100%;display:block}
+.rtext{flex:1;min-width:0}
+.rtext b{display:block;font-size:15.5px;font-weight:700;line-height:1.2}
+.rtext .rd{display:block;font-size:12.5px;color:var(--muted);margin-top:3px;font-weight:500}
+.row.done .rtext b{color:var(--muted);text-decoration:line-through;text-decoration-thickness:1.5px}
+.go{color:#B5AEA2;flex:none}
+.dots{display:inline-flex;gap:4px;margin-top:5px;vertical-align:middle}
+.dots i{width:9px;height:9px;border-radius:50%;background:#E4DED3;display:block}
+.dots i.opt{background:transparent;box-shadow:0 0 0 1.5px #E4DED3 inset}
+.dots i.on{background:var(--gc,var(--teal));box-shadow:none}
+.lvl{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.04em;background:#FFF1C9;color:#8A5A00;border-radius:999px;padding:2px 7px;margin-left:6px;vertical-align:middle}
+
+.foot{color:var(--muted);font-size:12px;text-align:center;margin-top:18px;line-height:1.5}
+.saved{display:inline-block;margin-top:6px;font-weight:600}
+
+/* sheet */
+.scrim{position:fixed;inset:0;background:rgba(20,28,30,.45);opacity:0;pointer-events:none;transition:opacity .2s;z-index:10}
+.scrim.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;max-width:640px;margin:0 auto;background:var(--bg);border-radius:22px 22px 0 0;max-height:94vh;overflow:auto;transform:translateY(105%);transition:transform .26s cubic-bezier(.2,.8,.2,1);z-index:11;padding-bottom:24px}
+.sheet.on{transform:none}
+.shbar{position:sticky;top:0;display:flex;align-items:center;gap:8px;padding:12px 14px;background:var(--bg);z-index:2}
+.shbar .grow{flex:1;text-align:center;font-size:13px;font-weight:700;color:var(--muted)}
+.stage{margin:0 14px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);position:relative;overflow:hidden}
+.stage svg{display:block;width:100%;height:auto}
+.stage .play{position:absolute;right:10px;bottom:10px;background:rgba(255,255,255,.92);border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:12.5px;font-weight:700;display:flex;gap:6px;align-items:center}
+.stage .lbl{position:absolute;left:12px;top:10px;font-size:11.5px;font-weight:700;color:var(--muted);background:rgba(255,255,255,.9);padding:3px 8px;border-radius:999px}
+.dbody{padding:16px 18px 0}
+.chip{display:inline-block;font-size:12px;font-weight:800;padding:4px 10px;border-radius:999px;letter-spacing:.02em}
+.dbody h2{font-size:26px;line-height:1.1;margin:10px 0 14px;font-weight:800;letter-spacing:-.02em}
+.dose{display:flex;gap:10px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:12px}
+.dose b{font-size:17px;font-weight:800;display:block}
+.dose span{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.sec{margin-bottom:16px}
+.sec h3,.boxttl{font-size:12.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:0 0 6px;font-weight:800}
+.sec p{margin:0;font-size:16.5px;line-height:1.5}
+.extra{font-size:14px;background:#FFF7E6;border:1px solid #F1DFB8;border-radius:12px;padding:9px 12px;margin-top:10px;line-height:1.4}
+.box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+.bigdots{display:flex;gap:10px;flex-wrap:wrap}
+.bigdots button{width:52px;height:52px;border-radius:50%;border:2.5px solid #D6CFC2;font-weight:800;font-size:17px;color:var(--muted);background:#FBFAF7}
+.bigdots button.opt{border-style:dashed}
+.bigdots button.on{background:var(--gc);border-color:var(--gc);color:#fff}
+.sethint{font-size:13px;color:var(--muted);margin-top:8px;font-weight:500}
+.rest{display:none;align-items:center;gap:10px;margin-top:12px;background:#EAF4F2;border-radius:12px;padding:10px 12px}
+.rest.on{display:flex}
+.rest b{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums}
+.rest .grow{flex:1;font-size:13.5px;font-weight:600;color:#0B4F49}
+.timer{text-align:center}
+.timer .t{font-size:44px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.02em;line-height:1}
+.timer .tb{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.pill{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:9px 16px;font-weight:700;font-size:14px}
+.stepper{display:flex;align-items:center;gap:12px}
+.stepper button.sq{width:46px;height:46px;border-radius:12px;border:1.5px solid var(--line);background:#FBFAF7;font-size:22px;font-weight:800}
+.stepper .val{flex:1;text-align:center}
+.stepper .val b{font-size:30px;font-weight:800;display:block;line-height:1}
+.stepper .val span{font-size:12px;color:var(--muted);font-weight:700}
+.bestmeta{display:flex;justify-content:space-between;align-items:center;margin-top:10px;font-size:13px;color:var(--muted);font-weight:600;gap:8px}
+.lvlbox{margin-top:10px;background:#FFF7E0;border:1px solid #F2DFA5;color:#6B4A00;border-radius:12px;padding:10px 12px;font-size:14px;font-weight:600;line-height:1.4}
+.lvlbox button{color:#0F6A61;text-decoration:underline;font-weight:800}
+.donebtn{display:flex;align-items:center;justify-content:center;gap:10px;width:calc(100% - 36px);margin:4px 18px 0;padding:16px;border-radius:16px;font-weight:800;font-size:17px;background:var(--ink);color:#fff}
+.donebtn.is{background:var(--teal-soft);color:#0B4F49}
+.tips h2{font-size:24px;margin:4px 0 12px;font-weight:800}
+.tips h3{font-size:16px;margin:18px 0 6px;font-weight:800}
+.tips ul{margin:0;padding-left:20px}
+.tips li{font-size:15.5px;line-height:1.5;margin-bottom:5px}
+.tips .warn{font-size:13.5px;color:#6E5A2B;background:#FFF7E6;border:1px solid #F1DFB8;border-radius:12px;padding:10px 12px;line-height:1.45;margin-top:16px}
+.chart svg{display:block;width:100%;height:auto}
+.trend{font-size:14px;font-weight:600;margin-top:6px}
+.plist .pi{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+.plist .pi:first-child{border-top:0}
+.plist .pi .grow{flex:1;min-width:0}
+.plist .pi b{display:block;font-size:15px;color:var(--ink)}
+.plist .pi span{font-size:12.5px;color:var(--muted);font-weight:600}
+.copyout{width:100%;height:160px;margin-top:10px;border:1.5px solid var(--line);border-radius:12px;padding:10px;font-size:13px;display:none}
+
+/* workout */
+.wo{position:fixed;inset:0;background:var(--bg);z-index:20;overflow:auto;display:none}
+.wo.on{display:block}
+.wo .wbar{position:sticky;top:0;background:var(--bg);display:flex;align-items:center;gap:10px;padding:12px 14px;z-index:2}
+.wo .wprog{flex:1;height:6px;background:#E7E1D6;border-radius:6px;overflow:hidden}
+.wo .wprog i{display:block;height:100%;background:var(--teal);border-radius:6px;transition:width .3s}
+.wo .wn{font-size:13px;font-weight:800;color:var(--muted);white-space:nowrap}
+.wo .inner{max-width:640px;margin:0 auto;padding-bottom:110px}
+.wo .wfoot{position:fixed;left:0;right:0;bottom:0;background:linear-gradient(transparent,var(--bg) 30%);padding:18px 16px 18px;z-index:3}
+.wo .wfoot .in{max-width:608px;margin:0 auto;display:flex;gap:10px}
+.fin{text-align:center;padding:40px 22px}
+.fin .big{font-size:60px;line-height:1}
+.fin h2{font-size:28px;margin:12px 0 6px;font-weight:800}
+.fin p{color:var(--muted);font-size:16px;margin:0 0 20px}
+@media (min-width:700px){.sheet{bottom:4vh;border-radius:22px;max-height:92vh}}
+</style>
+</head>
+<body>
+<div class="wrap" id="root"></div>
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true"></div>
+<div class="wo" id="wo" role="dialog" aria-modal="true"></div>
+<script type="application/json" id="state">{"v":2,"updated":0,"log":{}}</script>
+<script id="main">
+(function(){
+"use strict";
+
+/* ===================== FIGURE ENGINE ===================== */
+var G = 164; // ground y
+var L = {th:38, sh:36, ua:29, fa:27, to:46};
+function add(a,b){return [a[0]+b[0],a[1]+b[1]]}
+function sub(a,b){return [a[0]-b[0],a[1]-b[1]]}
+function mul(a,k){return [a[0]*k,a[1]*k]}
+function len(a){return Math.hypot(a[0],a[1])}
+function nrm(a){var l=len(a)||1;return [a[0]/l,a[1]/l]}
+function B(dir,x0,w,h){return {dir:dir||1,x0:x0==null?56:x0,w:w||72,h:h||22}}
+var B1 = B(1), B2 = B(-1);
+function surf(b,x){var t=(x-b.x0)/b.w; t=Math.max(0,Math.min(1,t)); var tt=b.dir===1?t:1-t; return G-tt*b.h}
+// foot lying along a board surface, heel at x, facing +x
+function foot(b,hx,ln){ln=ln||19;var y=surf(b,hx);var ang=Math.atan2(surf(b,hx+ln)-y,ln);var ux=Math.cos(ang),uy=Math.sin(ang);
+  return {A:[hx+ux*3+uy*6, y+uy*3-ux*6], T:[hx+ux*ln, y+uy*ln]};}
+function floorFoot(hx){return {A:[hx+3,G-6],T:[hx+19,G]}}
+function tiptoe(T,deg){var d=(deg||55)*Math.PI/180;return [T[0]-Math.cos(d)*16, T[1]-Math.sin(d)*16]}
+function ik(base,target,l1,l2,s){
+  var d=sub(target,base), dist=len(d), u=nrm(d);
+  if(dist>l1+l2-0.01){dist=l1+l2-0.01; target=add(base,mul(u,dist));}
+  if(dist<Math.abs(l1-l2)+0.01) dist=Math.abs(l1-l2)+0.01;
+  var a=(l1*l1-l2*l2+dist*dist)/(2*dist), h=Math.sqrt(Math.max(0,l1*l1-a*a));
+  var mid=add(base,mul(u,a)), perp=[-u[1],u[0]];
+  return [add(mid,mul(perp,h*s)), add(base,mul(u,dist))];
+}
+function lerp(a,b,t){
+  if(typeof a==="number"&&typeof b==="number") return a+(b-a)*t;
+  if(Array.isArray(a)&&Array.isArray(b)) return a.map(function(v,i){return lerp(v,b[i],t)});
+  if(a&&b&&typeof a==="object"&&typeof b==="object"){var o={};for(var k in a){o[k]=(k in b)?lerp(a[k],b[k],t):a[k]}for(var k2 in b){if(!(k2 in o))o[k2]=b[k2]}return o}
+  return t<.5?a:b;
+}
+function solve(p){
+  var P=p.P, t=(p.t||0)*Math.PI/180;
+  var N=p.N||[P[0]+Math.sin(t)*L.to, P[1]-Math.cos(t)*L.to];
+  var dirUp=nrm(sub(N,P));
+  var Hd=p.Hd||add(N,mul(dirUp,13));
+  var ho=p.hip||[0,0], so=p.sho||[0,0];
+  var hip1=add(P,ho), hip2=sub(P,ho);
+  var sBase=add(N,mul(dirUp,-5));
+  var sh1=add(sBase,so), sh2=sub(sBase,so);
+  var leg1=p.K1?[p.K1,p.A1]:ik(hip1,p.A1,L.th,L.sh,p.k1==null?-1:p.k1);
+  var leg2=p.K2?[p.K2,p.A2]:ik(hip2,p.A2,L.th,L.sh,p.k2==null?-1:p.k2);
+  var arm1=p.E1?[p.E1,p.H1]:ik(sh1,p.H1,L.ua,L.fa,p.e1==null?1:p.e1);
+  var arm2=p.E2?[p.E2,p.H2]:ik(sh2,p.H2,L.ua,L.fa,p.e2==null?1:p.e2);
+  var dA1=sub(leg1[1],p.A1), dA2=sub(leg2[1],p.A2);
+  return {P:P,N:N,Hd:Hd,hip1:hip1,hip2:hip2,sh1:sh1,sh2:sh2,
+    K1:leg1[0],A1:leg1[1],T1:add(p.T1,dA1),K2:leg2[0],A2:leg2[1],T2:add(p.T2,dA2),
+    E1:arm1[0],H1:arm1[1],E2:arm2[0],H2:arm2[1]};
+}
+function f(n){return Math.round(n*10)/10}
+function ln(a,b,c,w){return '<line x1="'+f(a[0])+'" y1="'+f(a[1])+'" x2="'+f(b[0])+'" y2="'+f(b[1])+'" stroke="'+c+'" stroke-width="'+w+'" stroke-linecap="round"/>'}
+function pl(pts,c,w){return '<polyline points="'+pts.map(function(p){return f(p[0])+','+f(p[1])}).join(' ')+'" fill="none" stroke="'+c+'" stroke-width="'+w+'" stroke-linecap="round" stroke-linejoin="round"/>'}
+function boardSvg(b){
+  var x0=b.x0,x1=b.x0+b.w, yl=G, yh=G-b.h, s='';
+  var pts = b.dir===1 ? [[x0,G],[x1,G],[x1,yh]] : [[x0,G],[x1,G],[x0,yh]];
+  s+='<polygon points="'+pts.map(function(p){return p.join(',')}).join(' ')+'" fill="#D8C6A6" stroke="#A88E66" stroke-width="2" stroke-linejoin="round"/>';
+  // grip lines
+  for(var i=1;i<6;i++){var x=x0+b.w*i/6, y=surf(b,x); s+='<line x1="'+f(x)+'" y1="'+f(y+2)+'" x2="'+f(x)+'" y2="'+f(Math.min(G-2,y+6))+'" stroke="#BCA47E" stroke-width="1.4" stroke-linecap="round"/>';}
+  return s;
+}
+function chairSvg(x){var c='#9AA5A8',s='';
+  s+=ln([x,G],[x,G-86],c,4)+ln([x,G-44],[x+30,G-44],c,5)+ln([x+30,G-44],[x+30,G],c,4)+ln([x,G-86],[x+4,G-86],c,4);
+  return s;}
+function propsSvg(ex){var s='';
+  s+='<line x1="4" y1="'+G+'" x2="216" y2="'+G+'" stroke="#D9D2C5" stroke-width="2"/>';
+  if(ex.mat) s+='<rect x="28" y="'+(G-3)+'" width="170" height="5" rx="2.5" fill="#CFE3DF"/>';
+  (ex.boards||[]).forEach(function(b){s+=boardSvg(b)});
+  if(ex.chair!=null) s+=chairSvg(ex.chair);
+  return s;}
+function figureSvg(p,ex,col){
+  var j=solve(p), near=col||'#14524D', far=ex.front?near:'#8DB7B1', skin=near;
+  var s='';
+  var bandC='#E2674F';
+  // far limbs
+  s+=pl([j.sh2,j.E2,j.H2],far,6.5);
+  s+=pl([j.hip2,j.K2,j.A2],far,8)+ln(j.A2,j.T2,far,6.5);
+  // torso
+  if(ex.front){ s+=ln(j.hip1,j.hip2,near,9)+ln(j.sh1,j.sh2,near,8); }
+  s+=ln(j.P,j.N,near,12);
+  // head
+  s+='<circle cx="'+f(j.Hd[0])+'" cy="'+f(j.Hd[1])+'" r="10" fill="'+near+'"/>';
+  // band
+  var band=p.band||ex.band;
+  if(band){var a,b;
+    if(band==='knees'){a=lerp(j.hip1,j.K1,.82);b=lerp(j.hip2,j.K2,.82);}
+    else if(band==='ankles'){a=lerp(j.K1,j.A1,.85);b=lerp(j.K2,j.A2,.85);}
+    else if(band==='feet'){a=lerp(j.A1,j.T1,.5);b=lerp(j.A2,j.T2,.5);}
+    if(a){ s+=ln(a,b,bandC,4.5); s+='<circle cx="'+f(a[0])+'" cy="'+f(a[1])+'" r="3.2" fill="'+bandC+'"/><circle cx="'+f(b[0])+'" cy="'+f(b[1])+'" r="3.2" fill="'+bandC+'"/>'; }
+  }
+  // near limbs
+  s+=pl([j.hip1,j.K1,j.A1],near,8.5)+ln(j.A1,j.T1,near,7);
+  s+=pl([j.sh1,j.E1,j.H1],near,7);
+  return s;
+}
+function sceneSvg(ex,pose,opts){
+  opts=opts||{};
+  return '<svg viewBox="'+(opts.vb||'0 -4 220 176')+'" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'+propsSvg(ex)+figureSvg(pose,ex)+(opts.extra||'')+'</svg>';
+}
+
+/* ===================== POSES ===================== */
+function P(x,y){return [x,y]}
+var chairHand=function(x){return [x+1,G-84]};
+function standOn(fn){return fn}
+// helpers for common feet
+var fC = foot(B1,70), fCfar = foot(B1,66);
+var tipC = tiptoe(fC.T), tipCfar = tiptoe(fCfar.T);
+
+var POSES = {
+ calf_raises:{boards:[B1],chair:110,dur:1100,hold:350,frames:[
+   {P:P(73,82),t:3,A1:fC.A,T1:fC.T,A2:fCfar.A,T2:fCfar.T,H1:chairHand(110),H2:chairHand(108)},
+   {P:P(80,69),t:3,A1:tipC,T1:fC.T,A2:tipCfar,T2:fCfar.T,H1:chairHand(110),H2:chairHand(108)}]},
+ soleus:{boards:[B1],chair:110,dur:2400,hold:900,frames:[
+   {P:P(66,88),t:8,A1:fC.A,T1:fC.T,A2:fCfar.A,T2:fCfar.T,H1:chairHand(110),H2:chairHand(108)},
+   {P:P(66,93),t:10,A1:fC.A,T1:fC.T,A2:fCfar.A,T2:fCfar.T,H1:chairHand(110),H2:chairHand(108)}]},
+ single_calf:{boards:[B1],chair:110,dur:1100,hold:350,frames:[
+   {P:P(73,82),t:3,A1:fC.A,T1:fC.T,A2:[fC.A[0]-16,fC.A[1]-24],T2:[fC.A[0]-24,fC.A[1]-12],H1:chairHand(110),H2:chairHand(108)},
+   {P:P(80,69),t:3,A1:tipC,T1:fC.T,A2:[tipC[0]-16,tipC[1]-24],T2:[tipC[0]-24,tipC[1]-12],H1:chairHand(110),H2:chairHand(108)}]},
+ toe_raises:(function(){var n=foot(B1,58),fr=foot(B1,55);
+   var up=function(ft){return [ft.A[0]+11,ft.A[1]-14]};
+   return {boards:[B1],chair:104,dur:1000,hold:300,frames:[
+   {P:P(n.A[0]+2,n.A[1]-72),t:4,A1:n.A,T1:n.T,A2:fr.A,T2:fr.T,H1:chairHand(104),H2:chairHand(102)},
+   {P:P(n.A[0]+1,n.A[1]-72),t:6,A1:n.A,T1:up(n),A2:fr.A,T2:up(fr),H1:chairHand(104),H2:chairHand(102)}]}})(),
+ knee_toe:(function(){var n=foot(B1,82);return {boards:[B1],dur:1300,hold:400,frames:[
+   {P:P(66,86),t:4,A1:n.A,T1:n.T,A2:[42,153],T2:[56,G],H1:[78,84],H2:[74,84]},
+   {P:P(76,92),t:6,A1:n.A,T1:n.T,A2:[42,153],T2:[56,G],H1:[88,92],H2:[84,92]}]}})(),
+ heel_walks:(function(){
+   var hf=function(x){var y=surf(B1,x);return {A:[x+1,y-6],T:[x+14,y-17]}};
+   var a=hf(88),b=hf(66);
+   return {boards:[B1],dur:700,hold:120,frames:[
+   {P:P(79,80),t:2,A1:a.A,T1:a.T,A2:b.A,T2:b.T,H1:[70,112],H2:[98,108]},
+   {P:P(79,80),t:2,A1:b.A,T1:b.T,A2:a.A,T2:a.T,H1:[98,108],H2:[70,112]}]}})(),
+ hamstring:{boards:[B1],dur:2600,hold:900,frames:[
+   {P:P(64,80),t:112,A1:fC.A,T1:fC.T,A2:fCfar.A,T2:fCfar.T,H1:[124,140],H2:[121,141]},
+   {P:P(61,80),t:124,A1:fC.A,T1:fC.T,A2:fCfar.A,T2:fCfar.T,H1:[128,143],H2:[125,144]}]},
+ rdl:(function(){var n=foot(B2,78),fr=foot(B2,74);return {boards:[B2],dur:1500,hold:500,frames:[
+   {P:P(n.A[0]+1,n.A[1]-72),t:2,A1:n.A,T1:n.T,A2:fr.A,T2:fr.T,H1:[n.A[0]+6,n.A[1]-58],H2:[n.A[0]+3,n.A[1]-58]},
+   {P:P(n.A[0]-9,n.A[1]-70),t:112,A1:n.A,T1:n.T,A2:fr.A,T2:fr.T,H1:[n.T[0]-2,n.T[1]-6],H2:[n.T[0]-5,n.T[1]-6]}]}})(),
+ split_stance:(function(){var n=foot(B1,86);return {boards:[B1],dur:2400,hold:900,frames:[
+   {P:P(62,84),t:6,A1:n.A,T1:n.T,A2:[44,155],T2:[60,G],H1:[80,104],H2:[77,104]},
+   {P:P(65,86),t:34,A1:n.A,T1:n.T,A2:[44,155],T2:[60,G],H1:[90,114],H2:[87,114]}]}})(),
+ squats:(function(){var n=foot(B2,72),fr=foot(B2,68);return {boards:[B2],dur:1300,hold:350,frames:[
+   {P:P(n.A[0]-1,n.A[1]-72),t:2,A1:n.A,T1:n.T,A2:fr.A,T2:fr.T,H1:[n.A[0]+12,n.A[1]-48],H2:[n.A[0]+9,n.A[1]-48]},
+   {P:P(54,110),t:34,A1:n.A,T1:n.T,A2:fr.A,T2:fr.T,H1:[134,76],H2:[131,77]}]}})(),
+ toe_taps:(function(){var st=foot(B2,98),n=foot(B2,102);return {boards:[B2],dur:900,hold:250,frames:[
+   {P:P(101,78),t:3,A1:n.A,T1:n.T,A2:st.A,T2:st.T,H1:[112,112],H2:[95,112]},
+   {P:P(99,92),t:14,A1:[134,157],T1:[147,147],A2:st.A,T2:st.T,H1:[122,106],H2:[118,106]}]}})(),
+ lunge:(function(){var n=foot(B1,92);return {boards:[B1],dur:1500,hold:400,frames:[
+   {P:P(62,84),t:3,A1:n.A,T1:n.T,A2:[34,152],T2:[47,G],H1:[66,120],H2:[63,120]},
+   {P:P(62,110),t:6,A1:n.A,T1:n.T,A2:[34,152],T2:[47,G],H1:[70,146],H2:[67,146]}]}})(),
+ kot_calf:{boards:[B1],chair:110,dur:1200,hold:350,frames:[
+   {P:P(67,90),t:8,A1:fC.A,T1:fC.T,A2:fCfar.A,T2:fCfar.T,H1:chairHand(110),H2:chairHand(108)},
+   {P:P(75,80),t:8,A1:tipC,T1:fC.T,A2:tipCfar,T2:fCfar.T,H1:chairHand(110),H2:chairHand(108)}]},
+ step_downs:(function(){var st=foot(B1,102);return {boards:[B1],dur:1800,hold:400,frames:[
+   {P:P(104,72),t:3,A1:[134,135],T1:[150,139],A2:st.A,T2:st.T,H1:[126,104],H2:[122,104]},
+   {P:P(101,90),t:16,A1:[136,157],T1:[152,G],A2:st.A,T2:st.T,H1:[140,104],H2:[136,104]}]}})(),
+ atg_lunge:(function(){var n=foot(B1,90);return {boards:[B1],dur:1800,hold:450,frames:[
+   {P:P(60,86),t:2,A1:n.A,T1:n.T,A2:[26,152],T2:[40,G],H1:[66,122],H2:[63,122]},
+   {P:P(66,124),t:2,A1:n.A,T1:n.T,A2:[26,152],T2:[40,G],H1:[82,148],H2:[50,150]}]}})(),
+ lateral_steps:{front:true,band:'knees',dur:900,hold:300,frames:[
+   {P:P(108,88),hip:[9,0],sho:[15,0],A1:[121,157],T1:[125,G],A2:[95,157],T2:[91,G],k1:-1,k2:1,H1:[127,86],H2:[89,86],e1:-1,e2:1},
+   {P:P(108,88),hip:[9,0],sho:[15,0],A1:[138,157],T1:[142,G],A2:[95,157],T2:[91,G],k1:-1,k2:1,H1:[127,86],H2:[89,86],e1:-1,e2:1},
+   {P:P(120,88),hip:[9,0],sho:[15,0],A1:[138,157],T1:[142,G],A2:[112,157],T2:[108,G],k1:-1,k2:1,H1:[139,86],H2:[101,86],e1:-1,e2:1}]},
+ kickbacks:{band:'ankles',chair:140,dur:1100,hold:300,frames:[
+   {P:P(100,85),t:8,A1:[88,152],T1:[101,G],A2:[100,158],T2:[116,G],H1:chairHand(140),H2:chairHand(138)},
+   {P:P(100,85),t:12,A1:[70,151],T1:[80,G-2],A2:[100,158],T2:[116,G],H1:chairHand(140),H2:chairHand(138)}]},
+ clamshells:{mat:true,band:'knees',dur:1200,hold:350,frames:[
+   {P:P(116,150),t:-90,hip:[0,-5],Hd:[50,141],A1:[128,152],T1:[136,150],A2:[128,157],T2:[136,156],K1:[150,150],K2:[150,156],H1:[92,158],H2:[48,154],E2:[60,158]},
+   {P:P(116,150),t:-90,hip:[0,-5],Hd:[50,141],A1:[128,151],T1:[136,149],A2:[128,157],T2:[136,156],K1:[143,116],K2:[150,156],H1:[92,158],H2:[48,154],E2:[60,158]}]},
+ runners_ext:(function(){
+   var tbl={K:[118,112],A:[153,112],T:[157,95]}, ext={K:[150,132],A:[184,116],T:[192,100]};
+   var base={P:P(118,150),t:-90,Hd:[58,148],H1:[100,158],H2:[97,158],E1:[84,158],E2:[82,158],band:'feet'};
+   function fr(a,b){var o=JSON.parse(JSON.stringify(base));o.K1=a.K;o.A1=a.A;o.T1=a.T;o.K2=[b.K[0]-3,b.K[1]];o.A2=[b.A[0]-3,b.A[1]];o.T2=[b.T[0]-3,b.T[1]];return o}
+   return {mat:true,dur:1000,hold:250,frames:[fr(tbl,tbl),fr(ext,tbl),fr(tbl,tbl),fr(tbl,ext)]};})(),
+ side_leg:{mat:true,band:'knees',dur:1200,hold:350,frames:[
+   {P:P(104,150),t:-90,hip:[0,-5],Hd:[44,141],A1:[177,149],T1:[183,145],A2:[177,157],T2:[183,154],H1:[82,158],H2:[42,154],E2:[54,158]},
+   {P:P(104,150),t:-90,hip:[0,-5],Hd:[44,141],A1:[167,110],T1:[173,107],A2:[177,157],T2:[183,154],H1:[82,158],H2:[42,154],E2:[54,158]}]},
+ monster:{band:'ankles',dur:850,hold:150,frames:[
+   {P:P(100,92),t:16,A1:[114,157],T1:[130,G],A2:[84,157],T2:[100,G],H1:[106,96],H2:[103,96]},
+   {P:P(100,92),t:16,A1:[84,157],T1:[100,G],A2:[114,157],T2:[130,G],H1:[106,96],H2:[103,96]}]},
+ bridges:{mat:true,band:'knees',dur:1300,hold:500,frames:[
+   {P:P(114,152),N:[70,152],Hd:[57,150],A1:[152,156],T1:[168,G],A2:[149,156],T2:[165,G],H1:[100,159],H2:[97,159],E1:[85,159],E2:[83,159]},
+   {P:P(118,118),N:[70,152],Hd:[57,150],A1:[152,156],T1:[168,G],A2:[149,156],T2:[165,G],H1:[100,159],H2:[97,159],E1:[85,159],E2:[83,159]}]}
+};
+
+/* ===================== EXERCISES (from the Velor Board book) ===================== */
+var GROUPS = [
+ {id:'calf', name:'Calves, Achilles & Ankles', short:'Calves & Ankles', col:'var(--c-calf)', soft:'var(--c-calf-soft)', hex:'#0F7A70', ch:'Chapter 7'},
+ {id:'ham', name:'Hamstrings', short:'Hamstrings', col:'var(--c-ham)', soft:'var(--c-ham-soft)', hex:'#4F5BB5', ch:'Chapter 8'},
+ {id:'quad', name:'Quads & Knees', short:'Quads & Knees', col:'var(--c-quad)', soft:'var(--c-quad-soft)', hex:'#C27A12', ch:'Chapter 9'},
+ {id:'hip', name:'Hips & Glutes (Band)', short:'Hips & Glutes', col:'var(--c-hip)', soft:'var(--c-hip-soft)', hex:'#C8553D', ch:'Chapter 10 · resistance band'}
+];
+var EX = [
+ {n:1,id:'calf_raises',g:'calf',name:'Calf Raises',how:'Stand on the Velor Board with both feet, legs straight, heels dropped. Press up and control each rep.',ben:'Deep stretch in the upper calf (gastrocnemius), improves walking mechanics and relieves tension.',dose:'3–4 sets of 10–15 reps'},
+ {n:2,id:'soleus',g:'calf',name:'Bent-Knee Soleus Stretch',how:'Stand with both feet, legs straight, heels dropped, but bend knees slightly.',ben:'Focuses on the soleus muscle – crucial for runners and squat depth.',dose:'2–3 sets of 30–45 seconds per leg',timer:[30,45]},
+ {n:3,id:'single_calf',g:'calf',name:'Single-Leg Calf Raises',how:'Stand on one leg on the Velor Board, slowly raise and lower heel.',ben:'Builds strength, ankle stability, and injury resistance.',dose:'3 sets of 6–10 reps per side'},
+ {n:4,id:'toe_raises',g:'calf',name:'Toe Raises',how:'Stand with heels at the bottom of the board and toes on the incline. Lift your toes toward your shins, then lower slowly. Use a wall or chair for balance.',ben:'Strengthens the shins and improves ankle stability, helping prevent shin splints, knee strain, and trips from poor toe clearance.',dose:'3 sets of 10–15 reps per side'},
+ {n:5,id:'knee_toe',g:'calf',name:'Knee-to-Toe Dorsiflexion',how:'Place one foot on the Velor Board, step the other back. Drive the front knee forward toward the wall or an imaginary line over toes.',ben:'Improves dorsiflexion for squats, lunges, and agility.',dose:'3 sets of 8–12 slow reps per side'},
+ {n:6,id:'heel_walks',g:'calf',name:'Heel Walks',how:'Stand at the bottom of the board and walk uphill on your heels, keeping toes off the board.',ben:'Strengthens shin muscles and improves ankle flexion strength.',dose:'2–3 sets of 20–30 seconds walking back and forth',timer:[20,30]},
+ {n:7,id:'hamstring',g:'ham',name:'Hamstring Stretch',how:'Stand on the Velor Board with both feet, legs straight. Bend over and grab the top of the board.',ben:'Deep stretch in the hamstring, prevents injuries and relieves tightness.',dose:'2–3 sets of 30–45 seconds per leg',timer:[30,45]},
+ {n:8,id:'rdl',g:'ham',name:'RDL Stretch',how:'Feet facing the opposite way on the board (toes pointing downhill), legs straight, try to grab your feet.',ben:'Focuses on the hamstring – crucial for preventing injuries.',dose:'2–3 sets of 8–10 reps'},
+ {n:9,id:'split_stance',g:'ham',name:'Split Stance Stretch',how:'Place your front foot on the Velor Board, back foot on the floor behind. Keep both legs straight and gently lean into the front leg.',ben:'Stretches the hamstrings while lightly engaging the hip flexors. Ideal for pre-run or workout mobility.',dose:'2–3 sets of 30–45 seconds per side',timer:[30,45]},
+ {n:10,id:'squats',g:'quad',name:'Squats',how:'Keep chest up, lower into a squat position for a full range of motion. Push through heels to stand.',ben:'Maximizes quad engagement while reducing knee strain, builds lower body strength, and improves functional stability for daily activities.',dose:'3–4 sets of 8–10 reps'},
+ {n:11,id:'toe_taps',g:'quad',name:'Toe Taps',how:'Stand on the board with both feet, alternate tapping heel on the ground.',ben:'Activates the anterior tibialis (shin) and builds control.',dose:'3 sets of 10–15 taps per leg'},
+ {n:12,id:'lunge',g:'quad',name:'Velor Board Lunge',how:'Step one foot onto the Velor Board, back foot behind. Lower into a deep lunge, letting the front knee travel forward. Push through the heel to return.',ben:'Builds quad and glute strength, improves knee and ankle mobility.',dose:'3 sets of 6–8 reps per leg',extra:'Target angle: 20–30°'},
+ {n:13,id:'kot_calf',g:'quad',name:'Knees Over Toes Calf Raises',how:'Let your knees track forward over your toes, then raise and lower your heels slowly. Use a wall or chair for assistance.',ben:'Strengthens the ankle–knee complex, improving dorsiflexion and shock absorption. Key for smoother walking, better balance, and reduced joint stress.',dose:'3 sets of 6–10 reps per side'},
+ {n:14,id:'step_downs',g:'quad',name:'Velor Board Step Downs',how:'Place one foot on the Velor Board and let the other foot hang off the edge. Slowly lower your hanging foot to the ground over a 3-second count, then return to the starting position. Use a wall or chair for balance if needed.',ben:'Builds knee and quad strength while improving control, balance, and joint stability.',dose:'3 sets of 6–10 reps per side'},
+ {n:15,id:'atg_lunge',g:'quad',name:'ATG Split Lunge',how:'Place your front foot flat on the Velor Board and step your back foot behind you. Slowly lower into a deep lunge, letting your front knee track forward over your toes while keeping your heel down.',ben:'Builds knee resilience, strengthens the quads, glutes, and hip flexors, and improves ankle dorsiflexion.',dose:'3 sets of 6–8 reps per side'},
+ {n:16,id:'lateral_steps',g:'hip',name:'Lateral Band Steps',how:'Loop a resistance band above your knees (or at ankles). Hinge slightly, keep toes forward, hips level, and step sideways without letting the knees cave in. Maintain band tension the whole time.',ben:'Targets glute medius/minimus and the lateral hip chain to improve knee tracking, pelvic stability, and balance, reducing knee collapse and easing joint stress.',dose:'3 sets of 8–12 steps per side'},
+ {n:17,id:'kickbacks',g:'hip',name:'Band Kickbacks',how:'Band at ankles. Stand hip-width, core braced. Shift weight to one leg, and kick the other leg straight back 6–8 in, then return slowly to a light toe tap behind the stance foot. Keep hips level and back neutral — if hips twist or lower back arches, shorten the range or use a lighter band.',ben:'Strengthens glutes and hamstrings.',dose:'2–3 sets of 12–15 per side',extra:'Complete all reps on one leg, then switch.'},
+ {n:18,id:'clamshells',g:'hip',name:'Clamshells',how:'Band above knees. Lie on your side, knees bent ~90°, feet together, hips stacked. Brace core, lift the top knee toward the ceiling without rolling your pelvis, lower slowly.',ben:'Strengthens the gluteus medius and obliques to improve hip stability and knee tracking.',dose:'3 sets of 12–15 per side',extra:'Complete one side before switching.'},
+ {n:19,id:'runners_ext',g:'hip',name:'Runner’s Extensions',how:'Lie on your back, band looped mid-foot on both feet. Hips and knees at 90°, shins parallel, feet hip-width. Brace core, hold one leg perfectly still as you fully extend the other against the band; return with control and keep alternating like running. Flex the anchor foot (toes toward shin) to keep the band from slipping.',ben:'Strengthens abdominals, hip flexors, and quads while training core/pelvic stability and better lower-body control.',dose:'3 × 12–15 per side, alternating each rep'},
+ {n:20,id:'side_leg',g:'hip',name:'Side-Lying Leg Lifts',how:'Band above knees (easier) or at ankles (harder). Lie on your side, legs straight and stacked, hips stacked. Lift the top leg straight up without hiking the hip; keep it in line with the bottom leg, then lower slowly.',ben:'Strengthens hip abductors (glute med/min), improving pelvic stability and knee tracking.',dose:'3 × 12–15 per side',extra:'Finish one side, then switch.'},
+ {n:21,id:'monster',g:'hip',name:'Monster Walk',how:'Band at ankles. Athletic stance (feet hip-width, knees soft, slight hinge). Take alternating steps about 8–10 inches, keep feet the same width and band tension; hips stay square and level. If hips twist, shorten steps or use a lighter band.',ben:'Targets gluteus maximus (with glute med/min) to build hip power and pelvic stability.',dose:'3 × 12–15 steps'},
+ {n:22,id:'bridges',g:'hip',name:'Hip Bridges',how:'Band above knees. Lie on your back, feet hip-width, heels close. Brace core and drive through heels to lift hips until torso and thighs form a straight line; press knees out into the band. Lower with control.',ben:'Targets glutes and hamstrings; pushing out on the band improves knee alignment and lower-back/pelvic stability.',dose:'3 × 12–15'}
+];
+
+/* ===================== EXERCISE TRAINING DATA ===================== */
+// [setsMin, setsMax, unit, lo, hi, next]
+var META = {
+ calf_raises:[3,4,'reps',10,15,'single_calf'], soleus:[2,3,'sec',30,45,'kot_calf'], single_calf:[3,3,'reps',6,10,null],
+ toe_raises:[3,3,'reps',10,15,'heel_walks'], knee_toe:[3,3,'reps',8,12,'lunge'], heel_walks:[2,3,'sec',20,30,null],
+ hamstring:[2,3,'sec',30,45,null], rdl:[2,3,'reps',8,10,null], split_stance:[2,3,'sec',30,45,null],
+ squats:[3,4,'reps',8,10,'lunge'], toe_taps:[3,3,'reps',10,15,null], lunge:[3,3,'reps',6,8,'atg_lunge'],
+ kot_calf:[3,3,'reps',6,10,null], step_downs:[3,3,'reps',6,10,null], atg_lunge:[3,3,'reps',6,8,null],
+ lateral_steps:[3,3,'steps',8,12,'monster'], kickbacks:[2,3,'reps',12,15,null], clamshells:[3,3,'reps',12,15,'side_leg'],
+ runners_ext:[3,3,'reps',12,15,null], side_leg:[3,3,'reps',12,15,null], monster:[3,3,'steps',12,15,null], bridges:[3,3,'reps',12,15,null]
+};
+var EXBYID={};
+EX.forEach(function(e){var m=META[e.id]; e.pose=POSES[e.id]; e.smin=m[0]; e.smax=m[1]; e.unit=m[2]; e.lo=m[3]; e.hi=m[4]; e.next=m[5]; EXBYID[e.id]=e;});
+function grp(id){for(var i=0;i<GROUPS.length;i++) if(GROUPS[i].id===id) return GROUPS[i];}
+var UNIT={reps:'reps',sec:'seconds held',steps:'steps'};
+var REST=30;
+
+var GOALS={
+ knee:{name:'Knee strength & pain relief',title:'Knee Plan',pick:['calf','quad','ham'],why:'Calf + quad + hamstring, 2–3 sets each — the book’s pick for knees.'},
+ calf:{name:'Tight calves & ankles',title:'Calf & Ankle Plan',pick:['calf','calf','calf'],why:'2–3 calf & ankle exercises — the book’s pick for tight calves.'},
+ mobility:{name:'Overall lower-body mobility',title:'Mobility Plan',pick:['calf','ham','quad','hip'],why:'Rotate 3–4 different exercises, 3–5 times a week.'},
+ hips:{name:'Hips & glutes (band)',title:'Hip & Glute Plan',pick:['hip','hip','hip'],why:'Band work for hip stability and knee tracking.'}
+};
+var KNEE=[null,{c:'#C8553D',t:'Very sore'},{c:'#E08A4B',t:'Sore'},{c:'#D3A93C',t:'Okay'},{c:'#6FAE72',t:'Good'},{c:'#0F7A70',t:'Great'}];
+
+/* ===================== STATE ===================== */
+var stateEl=document.getElementById('state');
+var state; try{state=JSON.parse(stateEl.textContent)}catch(e){state=null}
+if(!state||typeof state!=='object') state={};
+var LS_KEY='velor-board-daily-v1';
+try{var loc=JSON.parse(localStorage.getItem(LS_KEY)||'null'); if(loc&&loc.log&&(loc.updated||0)>(state.updated||0)) state=loc;}catch(e){}
+['log','sets','best','knee','plan'].forEach(function(k){if(!state[k]||typeof state[k]!=='object') state[k]={}});
+if(!state.goal) state.goal='knee';
+state.v=2; if(!state.updated) state.updated=0;
+
+var ui={sel:null, open:null, closed:{}, wo:null, progress:false};
+try{var u=JSON.parse(sessionStorage.getItem('velor-ui')||'null'); if(u){ui.sel=u.sel||null; ui.open=u.open||null; ui.wo=u.wo||null; ui.progress=!!u.progress; window.__restoreScroll=u.scroll||0;}}catch(e){}
+try{ui.closed=JSON.parse(localStorage.getItem('velor-closed')||'{}')||{}}catch(e){}
+
+function pad(n){return (n<10?'0':'')+n}
+function keyOf(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
+function todayKey(){return keyOf(new Date())}
+function dateOf(k){var a=k.split('-');return new Date(+a[0],+a[1]-1,+a[2])}
+function dayNum(k){var a=k.split('-');return Math.floor(Date.UTC(+a[0],+a[1]-1,+a[2])/86400000)}
+function shiftKey(k,n){var d=dateOf(k);d.setDate(d.getDate()+n);return keyOf(d)}
+function selKey(){return ui.sel||todayKey()}
+function doneOn(k){return state.log[k]||[]}
+function isDone(k,id){return doneOn(k).indexOf(id)>=0}
+function setsOf(k,id){return (state.sets[k]&&state.sets[k][id])||0}
+function bestOf(k,id){return state.best[k]&&state.best[k][id]}
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function streak(){var d=new Date(), n=0; if(!doneOn(keyOf(d)).length) d.setDate(d.getDate()-1); while(doneOn(keyOf(d)).length){n++; d.setDate(d.getDate()-1);} return n;}
+function totalSessions(){var n=0;for(var k in state.log) if(state.log[k].length) n++;return n}
+function kneeAvg(fromBack,days){var s=0,c=0;for(var i=fromBack;i<fromBack+days;i++){var r=state.knee[shiftKey(todayKey(),-i)];if(r&&r.r){s+=r.r;c++}}return c?s/c:null}
+
+/* ---- plan ---- */
+function planFor(k){
+  var saved=state.plan[k]||{}, goal=saved.goal||state.goal||'knee'; if(!GOALS[goal]) goal='knee';
+  var shift=saved.shift||0, g=GOALS[goal], d=dayNum(k)+shift, ids=[], cnt={};
+  g.pick.forEach(function(gid){
+    var list=EX.filter(function(e){return e.g===gid}), per=g.pick.filter(function(x){return x===gid}).length, c=cnt[gid]||0; cnt[gid]=c+1;
+    var idx=((d*per+c+gid.length*2)%list.length+list.length)%list.length; ids.push(list[idx].id);
+  });
+  return {goal:goal,ids:ids,shift:shift};
+}
+
+/* ---- mutations ---- */
+function touch(){state.updated=Date.now(); try{localStorage.setItem(LS_KEY,JSON.stringify(state))}catch(e){} schedulePublish();}
+function setDone(k,id,on){
+  var arr=(state.log[k]||[]).slice(), i=arr.indexOf(id);
+  if(on&&i<0) arr.push(id); if(!on&&i>=0) arr.splice(i,1);
+  if(arr.length) state.log[k]=arr; else delete state.log[k];
+}
+function setSetsN(k,id,n){
+  if(!state.sets[k]) state.sets[k]={};
+  if(n>0) state.sets[k][id]=n; else delete state.sets[k][id];
+  if(!Object.keys(state.sets[k]).length) delete state.sets[k];
+}
+function toggle(id,k){
+  k=k||selKey(); var e=EXBYID[id], on=!isDone(k,id);
+  setDone(k,id,on);
+  if(on&&setsOf(k,id)<e.smin) setSetsN(k,id,e.smin);
+  if(!on) setSetsN(k,id,0);
+  touch();
+}
+function tapSet(id,i,k){ // i is 1-based
+  k=k||selKey(); var e=EXBYID[id], cur=setsOf(k,id), n=(cur===i)?i-1:i;
+  setSetsN(k,id,n); setDone(k,id,n>=e.smin); touch();
+  return n>cur; // true when a set was added
+}
+function setBest(k,id,v){if(!state.best[k]) state.best[k]={}; state.best[k][id]=v; touch();}
+function setKnee(k,r){var o=state.knee[k]||{}; if(o.r===r) delete o.r; else o.r=r; if(!o.r&&!o.n) delete state.knee[k]; else state.knee[k]=o; touch();}
+function setNote(k,n){var o=state.knee[k]||{}; n=n.trim().slice(0,300); if(n) o.n=n; else delete o.n; if(!o.r&&!o.n) delete state.knee[k]; else state.knee[k]=o; touch();}
+
+/* ---- progress ---- */
+function history(id){var h=[];Object.keys(state.best).sort().forEach(function(k){var v=state.best[k][id];if(v!=null) h.push([k,v])});return h}
+function tipFor(e){
+  if(e.next) return {txt:'Ready to level up! Try the harder version:',next:e.next};
+  if(e.unit==='sec') return {txt:'Ready to level up! Hold the full '+e.hi+' seconds every set, then add a set.'};
+  if(e.g==='hip') return {txt:'Ready to level up! Try a stronger resistance band.'};
+  return {txt:'Ready to level up! Slow it down — take 3 seconds to lower each rep.'};
+}
+function levelInfo(e){
+  var h=history(e.id), hits=0;
+  for(var i=h.length-1;i>=0&&h[i][1]>=e.hi;i--) hits++;
+  if(hits>=3) return {ready:true,tip:tipFor(e),hits:hits};
+  if(hits>0) return {ready:false,hits:hits};
+  return null;
+}
+
+/* ---- saving ---- */
+var artifactApi=null, pending=false, pubTimer=null, saveStatus='';
+function schedulePublish(){pending=true; setStatus(artifactApi?'Saving…':'Saved on this device'); clearTimeout(pubTimer); pubTimer=setTimeout(flush,2500);}
+function buildDoc(){
+  var css=document.getElementById('css').textContent, main=document.getElementById('main').textContent;
+  var json=JSON.stringify(state).replace(/</g,'\\u003c');
+  return '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<title>Velor Board Daily</title>\n'+
+   '<link rel="preconnect" href="https://fonts.googleapis.com">\n<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n'+
+   '<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">\n'+
+   '<style id="css">'+css+'</style>\n</head>\n<body>\n<div class="wrap" id="root"></div>\n<div class="scrim" id="scrim"></div>\n<div class="sheet" id="sheet" role="dialog" aria-modal="true"></div>\n<div class="wo" id="wo" role="dialog" aria-modal="true"></div>\n'+
+   '<script type="application/json" id="state">'+json+'<\/script>\n<script id="main">'+main+'<\/script>\n</body>\n</html>\n';
+}
+function busy(){return timer.running||!!ui.wo||(document.activeElement&&document.activeElement.tagName==='TEXTAREA')}
+function flush(force){
+  if(!pending) return;
+  if(!artifactApi){pending=false; setStatus('Saved on this device'); return;}
+  if(busy()&&!force){clearTimeout(pubTimer); pubTimer=setTimeout(flush,3000); return;}
+  pending=false;
+  try{sessionStorage.setItem('velor-ui',JSON.stringify({sel:ui.sel,open:ui.open,wo:ui.wo,progress:ui.progress,scroll:window.scrollY||0}))}catch(e){}
+  Promise.resolve().then(function(){return artifactApi.publish(buildDoc())}).then(function(){setStatus('Saved ✓')}).catch(function(err){
+    var m=String(err&&(err.code||err.message)||err); if(/conflict/i.test(m)) return; setStatus('Saved on this device');
+  });
+}
+document.addEventListener('visibilitychange',function(){if(document.visibilityState==='hidden'&&pending){clearTimeout(pubTimer);flush(true);}});
+function setStatus(s){saveStatus=s;var el=document.getElementById('savestat');if(el) el.textContent=s;}
+
+/* ===================== SHARED PIECES ===================== */
+var CHECK='<svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 8.5l3.2 3L13 4.5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+var CHEV='<svg class="chev" width="18" height="18" viewBox="0 0 18 18"><path d="M4.5 7l4.5 4.5L13.5 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+var ARR='<svg class="go" width="16" height="16" viewBox="0 0 16 16"><path d="M6 3.5l4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+var XI='<svg width="18" height="18" viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+var LI='<svg width="18" height="18" viewBox="0 0 16 16"><path d="M10 3.5L5.5 8l4.5 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+var RI='<svg width="18" height="18" viewBox="0 0 16 16"><path d="M6 3.5l4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+var GICON={
+ calf:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3c0 5 1 8 1 11s-3 3-3 6h9c0-2-3-2-3-4 0-3 1-6 1-13"/></svg>',
+ ham:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3c-1 4-1 7 0 10l1 8M15 3c1 4 1 8-1 11l-1 7"/></svg>',
+ quad:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.5"/><path d="M12 3v5.5M12 15.5V21"/></svg>',
+ hip:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8c3 2 13 2 16 0M6 9l-1 11M18 9l1 11M8 14c2 2 6 2 8 0"/></svg>'
+};
+var thumbCache={};
+function thumbSvg(e){
+  if(thumbCache[e.id]) return thumbCache[e.id];
+  var fr=e.pose.frames, p=fr[e.pose.thumb!=null?e.pose.thumb:Math.min(1,fr.length-1)];
+  return thumbCache[e.id]=sceneSvg(e.pose,p,{vb:'0 -4 220 176'});
+}
+function ringSvg(frac,size,stroke,col){
+  var r=(size-stroke)/2, c=2*Math.PI*r;
+  return '<svg width="'+size+'" height="'+size+'"><circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" fill="none" stroke="#E7E1D6" stroke-width="'+stroke+'"/>'+
+   '<circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" fill="none" stroke="'+col+'" stroke-width="'+stroke+'" stroke-linecap="round" stroke-dasharray="'+c+'" stroke-dashoffset="'+(c*(1-Math.min(1,frac)))+'" style="transition:stroke-dashoffset .4s"/></svg>';
+}
+var DN=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function nice(k){var d=dateOf(k);return DN[d.getDay()]+', '+MN[d.getMonth()]+' '+d.getDate()}
+function short(k){var d=dateOf(k);return MN[d.getMonth()]+' '+d.getDate()}
+function dotsHtml(e,k){var n=setsOf(k,e.id),s='<span class="dots" aria-label="'+n+' of '+e.smin+' sets">';for(var i=1;i<=e.smax;i++) s+='<i class="'+(i<=n?'on':(i>e.smin?'opt':''))+'"></i>';return s+'</span>';}
+function dayWord(k){return k===todayKey()?'today':'for '+nice(k)}
+function scaleHtml(k){var r=state.knee[k]&&state.knee[k].r, s='<div class="scale">';
+  for(var i=1;i<=5;i++) s+='<button data-act="knee" data-v="'+i+'" class="'+(r===i?'on':'')+'" style="'+(r===i?'background:'+KNEE[i].c:'')+'" aria-pressed="'+(r===i)+'"><b>'+i+'</b><span>'+KNEE[i].t+'</span></button>';
+  return s+'</div>';}
+
+/* ===================== MAIN SCREEN ===================== */
+function render(){
+  var k=selKey(), isToday=k===todayKey(), done=doneOn(k), n=done.length;
+  var h='';
+  h+='<div class="top"><div class="ring">'+ringSvg(n/EX.length,64,7,'#0F7A70')+'<div class="num">'+n+'<small>of '+EX.length+'</small></div></div>'+
+     '<div class="ttl"><h1>Velor Board Daily</h1><div class="sub">'+(isToday?'Today · ':'')+nice(k)+'</div></div>'+
+     '<button class="iconbtn" data-act="progress" aria-label="Progress"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5M4 19h16M8 15l4-4 3 3 5-6"/></svg></button>'+
+     '<button class="iconbtn" data-act="tips" aria-label="Tips from the book"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg></button></div>';
+  var st=streak(), ka=kneeAvg(0,7);
+  h+='<div class="statrow"><div class="stat"><b>'+st+(st===1?' day':' days')+'</b><span>Streak</span></div><div class="stat"><b>'+totalSessions()+'</b><span>Days trained</span></div>'+
+     '<button class="stat" data-act="progress"><b>'+(ka?ka.toFixed(1)+'<small style="font-size:12px;color:var(--muted)">/5</small>':'—')+'</b><span>Knee avg (7d)</span></button></div>';
+  h+='<div class="week">';
+  var d=new Date(); d.setDate(d.getDate()-6);
+  for(var i=0;i<7;i++){var dk=keyOf(d), c=doneOn(dk).length;
+    h+='<button class="day'+(dk===k?' sel':'')+'" data-act="day" data-v="'+dk+'"><span class="dn">'+DN[d.getDay()].slice(0,2)+'</span><span class="dd">'+d.getDate()+'</span><span class="dot'+(c?' has':'')+'">'+(c||'')+'</span></button>';
+    d.setDate(d.getDate()+1);}
+  h+='</div><div class="viewing">'+(isToday?'Tap a day to look back or fill in a missed day.':'Editing '+nice(k)+' · <button data-act="backtoday">Back to today</button>')+'</div>';
+
+  // plan
+  var pl=planFor(k), g=GOALS[pl.goal], pdone=pl.ids.filter(function(id){return isDone(k,id)}).length;
+  h+='<section class="card plan"><div class="ph"><div class="grow"><div class="eyebrow">'+(isToday?'Today’s plan':'Plan for '+short(k))+' · '+pdone+'/'+pl.ids.length+' done</div><h3>'+g.title+'</h3>'+
+     '<select data-act="goal" aria-label="Goal">'+Object.keys(GOALS).map(function(gk){return '<option value="'+gk+'"'+(gk===pl.goal?' selected':'')+'>Goal: '+GOALS[gk].name+'</option>'}).join('')+'</select></div></div>';
+  pl.ids.forEach(function(id){var e=EXBYID[id], on=isDone(k,id);
+    h+='<button class="prow'+(on?' done':'')+'" data-act="open" data-id="'+id+'"><span class="thumb">'+thumbSvg(e)+'</span><span class="pt"><b>'+e.name+'</b><span>'+grp(e.g).short+' · '+setsOf(k,id)+'/'+e.smin+' sets</span></span><span class="pchk">'+CHECK+'</span></button>';});
+  h+='<div class="pbtns"><button class="btn white" data-act="start"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M4 2.5v11l9-5.5z" fill="currentColor"/></svg>'+(pdone===pl.ids.length?'Do it again':(pdone?'Continue workout':'Start workout'))+'</button><button class="btn ghost" data-act="shuffle" aria-label="Pick different exercises">↻ Swap</button></div>';
+  h+='<div style="font-size:12.5px;opacity:.75;margin-top:10px;line-height:1.4">'+g.why+'</div></section>';
+
+  // knee check-in
+  var kn=state.knee[k]||{};
+  h+='<section class="card"><div class="kh"><h3 class="grow">How do your knees feel'+(isToday?' today':'')+'?</h3><button class="link" data-act="progress">See trend</button></div>'+scaleHtml(k)+
+     '<textarea class="note" rows="1" data-act="note" placeholder="Add a note (optional) — e.g. stiff on stairs">'+esc(kn.n||'')+'</textarea></section>';
+
+  h+='<div class="secttl">All exercises</div>';
+  GROUPS.forEach(function(g){
+    var list=EX.filter(function(e){return e.g===g.id}), dn=list.filter(function(e){return done.indexOf(e.id)>=0}).length, closed=!!ui.closed[g.id];
+    h+='<section class="group'+(closed?' closed':'')+'" style="--gc:'+g.col+'">';
+    h+='<button class="ghead" data-act="group" data-v="'+g.id+'"><span class="gbadge" style="background:'+g.soft+';color:'+g.col+'">'+GICON[g.id]+'</span><span class="gtitle"><b>'+g.name+'</b><span>'+list.length+' exercises · '+g.ch+'</span></span><span class="gcount" style="background:'+(dn?g.col:g.soft)+';color:'+(dn?'#fff':g.col)+'">'+dn+'/'+list.length+'</span>'+CHEV+'</button>';
+    h+='<div class="bar"><i style="width:'+(dn/list.length*100)+'%;background:'+g.col+'"></i></div><div class="rows">';
+    list.forEach(function(e){var on=done.indexOf(e.id)>=0, lv=levelInfo(e);
+      h+='<div class="row'+(on?' done':'')+'"><button class="chk" data-act="check" data-id="'+e.id+'" aria-label="Mark '+e.name+' done" aria-pressed="'+on+'"><span class="box">'+CHECK+'</span></button>'+
+         '<button class="rmain" data-act="open" data-id="'+e.id+'"><span class="thumb">'+thumbSvg(e)+'</span><span class="rtext"><b>'+e.n+'. '+e.name+(lv&&lv.ready?'<span class="lvl">⬆ LEVEL UP</span>':'')+'</b><span class="rd">'+e.dose+'</span>'+dotsHtml(e,k)+'</span>'+ARR+'</button></div>';
+    });
+    h+='</div></section>';
+  });
+  h+='<div class="foot">Exercises from <i>The Complete Velor Board Blueprint</i>. Hold a chair or table for balance; stop if anything hurts.<br><span class="saved" id="savestat">'+saveStatus+'</span></div>';
+  document.getElementById('root').innerHTML=h;
+}
+
+var root=document.getElementById('root');
+root.addEventListener('click',function(ev){
+  var t=ev.target.closest('[data-act]'); if(!t||t.tagName==='SELECT'||t.tagName==='TEXTAREA') return;
+  var a=t.dataset.act, k=selKey();
+  if(a==='check'){toggle(t.dataset.id); render(); return;}
+  if(a==='open'){openEx(t.dataset.id); return;}
+  if(a==='group'){var g=t.dataset.v; ui.closed[g]=!ui.closed[g]; try{localStorage.setItem('velor-closed',JSON.stringify(ui.closed))}catch(e){} t.parentNode.classList.toggle('closed'); return;}
+  if(a==='day'){ui.sel=t.dataset.v===todayKey()?null:t.dataset.v; render(); return;}
+  if(a==='backtoday'){ui.sel=null; render(); return;}
+  if(a==='tips'){openTips(); return;}
+  if(a==='progress'){openProgress(); return;}
+  if(a==='knee'){setKnee(k,+t.dataset.v); render(); return;}
+  if(a==='shuffle'){var p=planFor(k); state.plan[k]={goal:p.goal,shift:(p.shift||0)+1}; touch(); render(); return;}
+  if(a==='start'){startWorkout(); return;}
+});
+root.addEventListener('change',function(ev){
+  var t=ev.target, k=selKey();
+  if(t.dataset.act==='goal'){state.goal=t.value; state.plan[k]={goal:t.value,shift:0}; touch(); render(); return;}
+  if(t.dataset.act==='note'){setNote(k,t.value); return;}
+});
+root.addEventListener('input',function(ev){var t=ev.target; if(t.tagName==='TEXTAREA'){t.style.height='auto';t.style.height=t.scrollHeight+'px';}});
+
+/* ===================== ANIMATION + TIMERS ===================== */
+var anim={raf:0,playing:true,ex:null,t0:0};
+function ease(t){return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2}
+function drawAt(now){
+  var e=anim.ex; if(!e) return;
+  var ps=e.pose, fr=ps.frames, seg=ps.dur+ps.hold, n=fr.length, cyc=seg*n;
+  var tt=((now-anim.t0)%cyc+cyc)%cyc, i=Math.floor(tt/seg), r=tt-i*seg;
+  var pose=lerp(fr[i],fr[(i+1)%n], r<ps.hold?0:ease((r-ps.hold)/ps.dur));
+  var fig=document.getElementById('fig'); if(fig) fig.innerHTML=propsSvg(ps)+figureSvg(pose,ps);
+}
+function tick(now){drawAt(now); if(anim.playing&&anim.ex) anim.raf=requestAnimationFrame(tick);}
+function startAnim(e){anim.ex=e; cancelAnimationFrame(anim.raf); anim.t0=performance.now(); if(anim.playing) anim.raf=requestAnimationFrame(tick); else drawAt(anim.t0+e.pose.hold+e.pose.dur);}
+function stopAnim(){cancelAnimationFrame(anim.raf); anim.ex=null;}
+function stageHtml(e){return '<div class="stage"><span class="lbl">'+(e.pose.boards?'Velor Board':'Resistance band')+(e.pose.chair!=null?' + chair for balance':'')+'</span><svg id="fig" viewBox="0 -4 220 176" xmlns="http://www.w3.org/2000/svg"></svg><button class="play" data-act="play">'+(anim.playing?'❚❚ Pause':'▶ Play')+'</button></div>';}
+
+var timer={left:0,kind:null,iv:0,running:false};
+function fmt(s){return Math.floor(s/60)+':'+pad(s%60)}
+function beep(){try{var C=window.AudioContext||window.webkitAudioContext; if(!C) return; var c=beep.c||(beep.c=new C()); [0,0.25,0.5].forEach(function(o){var g=c.createGain(),os=c.createOscillator(); os.frequency.value=880; os.connect(g); g.connect(c.destination); g.gain.setValueAtTime(0.0001,c.currentTime+o); g.gain.exponentialRampToValueAtTime(0.3,c.currentTime+o+0.02); g.gain.exponentialRampToValueAtTime(0.0001,c.currentTime+o+0.2); os.start(c.currentTime+o); os.stop(c.currentTime+o+0.22);});}catch(e){}}
+function paintTimer(){
+  var hd=document.getElementById('tdisp'), rb=document.getElementById('rest'), rd=document.getElementById('restdisp'), rl=document.getElementById('restlbl');
+  if(timer.kind==='hold'&&hd) hd.textContent=timer.left>0?fmt(timer.left):'Done!';
+  if(rb){ if(timer.kind==='rest'){rb.classList.add('on'); if(rd) rd.textContent=fmt(Math.max(0,timer.left)); if(rl) rl.textContent=timer.left>0?'Rest, then do your next set':'Rest over — next set!';} else if(timer.kind!=='restdone') rb.classList.remove('on'); }
+}
+function startTimer(sec,kind){
+  stopTimer(); try{beep.c=beep.c||new (window.AudioContext||window.webkitAudioContext)()}catch(e){}
+  timer.left=sec; timer.kind=kind; timer.running=true; paintTimer();
+  timer.iv=setInterval(function(){timer.left--; paintTimer();
+    if(timer.left<=0){clearInterval(timer.iv); timer.running=false; beep(); try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}
+      if(kind==='rest'){timer.kind='restdone'; setTimeout(function(){if(timer.kind==='restdone'){timer.kind=null; var rb=document.getElementById('rest'); if(rb) rb.classList.remove('on');}},2500);} }
+  },1000);
+}
+function stopTimer(){clearInterval(timer.iv); timer.running=false; timer.kind=null; var rb=document.getElementById('rest'); if(rb) rb.classList.remove('on');}
+
+/* ---- training blocks shared by detail sheet and workout ---- */
+function setsBlock(e,k){
+  var n=setsOf(k,e.id), s='<div class="box" style="--gc:'+grp(e.g).col+'"><div class="boxttl">Sets '+(isDone(k,e.id)?'· done ✓':'· tap after each set')+'</div><div class="bigdots">';
+  for(var i=1;i<=e.smax;i++) s+='<button data-act="set" data-v="'+i+'" class="'+(i<=n?'on':'')+(i>e.smin?' opt':'')+'" aria-label="Set '+i+'">'+i+'</button>';
+  s+='</div><div class="sethint">'+(e.smax>e.smin?'Set '+e.smax+' is optional (dashed). ':'')+'Rest '+REST+'s between sets.</div>';
+  s+='<div class="rest" id="rest"><b id="restdisp">0:30</b><span class="grow" id="restlbl">Rest, then do your next set</span><button class="pill" data-act="skiprest">Skip</button></div></div>';
+  if(e.unit==='sec'&&EXBYID[e.id]){var opts=[e.lo,e.hi];
+    s+='<div class="box timer"><div class="boxttl">Hold timer</div><div class="t" id="tdisp">'+fmt(e.lo)+'</div><div class="tb">'+opts.map(function(x){return '<button class="pill" data-act="hold" data-v="'+x+'">Start '+x+'s</button>'}).join('')+'<button class="pill" data-act="tstop">Reset</button></div></div>';}
+  return s;
+}
+function bestBlock(e,k){
+  var v=bestOf(k,e.id), h=history(e.id), last=h.length?h[h.length-1][1]:null, pb=h.reduce(function(m,x){return Math.max(m,x[1])},0);
+  var shown=v!=null?v:(last!=null?last:e.lo);
+  var s='<div class="box"><div class="boxttl">'+(e.unit==='sec'?'Longest hold':'Best set')+' '+(k===todayKey()?'today':'on '+short(k))+'</div><div class="stepper">'+
+    '<button class="sq" data-act="bminus" aria-label="Less">−</button><div class="val"><b id="bval">'+shown+'</b><span>'+UNIT[e.unit]+' · goal '+e.lo+'–'+e.hi+'</span></div><button class="sq" data-act="bplus" aria-label="More">+</button></div>';
+  s+='<div class="bestmeta"><span>'+(pb?'Personal best: '+pb+' · '+h.length+' session'+(h.length===1?'':'s')+' logged':'Log your best set to track progress')+'</span>'+
+     (v==null?'<button class="pill" data-act="bsave">Save '+shown+'</button>':'<span style="color:var(--teal)">Saved ✓</span>')+'</div>';
+  var lv=levelInfo(e);
+  if(lv&&lv.ready) s+='<div class="lvlbox">⬆ '+lv.tip.txt+(lv.tip.next?' <button data-act="goto" data-id="'+lv.tip.next+'">'+EXBYID[lv.tip.next].name+' →</button>':'')+'</div>';
+  else if(lv) s+='<div class="lvlbox" style="background:#F3F7F6;border-color:#DCE9E6;color:#285B55">Top of the range '+lv.hits+' of 3 sessions in a row. Hit '+e.hi+' three sessions running to level up.</div>';
+  return s+'</div>';
+}
+function infoBlock(e){return '<div class="sec"><h3>How to do it</h3><p>'+e.how+'</p>'+(e.extra?'<div class="extra">'+e.extra+'</div>':'')+'</div><div class="sec"><h3>Benefit</h3><p>'+e.ben+'</p></div>';}
+function doseBlock(e){var g=grp(e.g);return '<div class="dose"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="'+g.hex+'" stroke-width="2" stroke-linecap="round"><path d="M4 12h16M7 8v8M17 8v8M2.5 10v4M21.5 10v4"/></svg><div><span>Sets &amp; reps</span><b>'+e.dose+'</b></div></div>';}
+
+// handles actions inside the sheet or workout; returns true if handled
+function trainingAction(a,t,e,k,rerender){
+  if(a==='play'){anim.playing=!anim.playing; t.innerHTML=anim.playing?'❚❚ Pause':'▶ Play'; if(anim.playing){anim.t0=performance.now();anim.raf=requestAnimationFrame(tick);} else cancelAnimationFrame(anim.raf); return true;}
+  if(a==='set'){var added=tapSet(e.id,+t.dataset.v,k); var n=setsOf(k,e.id); rerender(); render(); if(added&&n<e.smax) startTimer(REST,'rest'); return true;}
+  if(a==='skiprest'){stopTimer(); return true;}
+  if(a==='hold'){startTimer(+t.dataset.v,'hold'); return true;}
+  if(a==='tstop'){stopTimer(); var el=document.getElementById('tdisp'); if(el) el.textContent=fmt(e.lo); return true;}
+  if(a==='bminus'||a==='bplus'||a==='bsave'){
+    var cur=+document.getElementById('bval').textContent, step=e.unit==='sec'?5:1;
+    if(a==='bminus') cur=Math.max(0,cur-step); if(a==='bplus') cur=cur+step;
+    setBest(k,e.id,cur); var keepRest=timer.kind==='rest'?timer.left:0; rerender(); render(); if(keepRest>0&&timer.running){paintTimer();} return true;}
+  return false;
+}
+
+/* ===================== DETAIL SHEET ===================== */
+var sheet=document.getElementById('sheet'), scrim=document.getElementById('scrim');
+function showSheet(){sheet.classList.add('on'); scrim.classList.add('on'); document.body.style.overflow='hidden';}
+function closeSheet(){sheet.classList.remove('on');scrim.classList.remove('on');stopAnim();stopTimer();ui.open=null;ui.progress=false;document.body.style.overflow='';}
+scrim.addEventListener('click',closeSheet);
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){if(ui.wo) exitWorkout(); else closeSheet();}});
+var cur=null;
+function detailInner(e,k){
+  var on=isDone(k,e.id), g=grp(e.g);
+  return '<div class="dbody"><span class="chip" style="background:'+g.soft+';color:'+g.col+'">'+g.short.toUpperCase()+'</span><h2>'+e.n+'. '+e.name+'</h2>'+doseBlock(e)+setsBlock(e,k)+bestBlock(e,k)+infoBlock(e)+'</div>'+
+    '<button class="donebtn'+(on?' is':'')+'" data-act="done">'+(on?'✓ Done '+(k===todayKey()?'today':'on '+nice(k))+' — tap to undo':'Mark done '+dayWord(k))+'</button>';
+}
+function openEx(id,keepScroll){
+  var e=EXBYID[id]; if(!e) return; ui.open=id; ui.progress=false; cur=e; stopTimer();
+  var k=selKey(), idx=EX.indexOf(e);
+  var h='<div class="shbar"><button class="iconbtn" data-act="prev" aria-label="Previous exercise"'+(idx===0?' disabled style="opacity:.35"':'')+'>'+LI+'</button>'+
+    '<div class="grow">'+(idx+1)+' of '+EX.length+'</div>'+
+    '<button class="iconbtn" data-act="next" aria-label="Next exercise"'+(idx===EX.length-1?' disabled style="opacity:.35"':'')+'>'+RI+'</button>'+
+    '<button class="iconbtn" data-act="close" aria-label="Close">'+XI+'</button></div>'+stageHtml(e)+'<div id="dinner">'+detailInner(e,k)+'</div>';
+  sheet.innerHTML=h; if(!keepScroll) sheet.scrollTop=0; showSheet(); startAnim(e);
+}
+function rerenderDetail(){var el=document.getElementById('dinner'); if(el&&cur) el.innerHTML=detailInner(cur,selKey());}
+sheet.addEventListener('click',function(ev){
+  var t=ev.target.closest('[data-act]'); if(!t) return;
+  var a=t.dataset.act, k=selKey(), e=cur, idx=e?EX.indexOf(e):-1;
+  if(a==='close') return closeSheet();
+  if(a==='copy') return copySummary(t);
+  if(a==='openx'){openEx(t.dataset.id); return;}
+  if(!e||ui.progress) return;
+  if(a==='prev'&&idx>0) return openEx(EX[idx-1].id);
+  if(a==='next'&&idx<EX.length-1) return openEx(EX[idx+1].id);
+  if(a==='goto'){openEx(t.dataset.id); return;}
+  if(a==='done'){toggle(e.id); render(); rerenderDetail(); return;}
+  trainingAction(a,t,e,k,rerenderDetail);
+});
+
+/* ===================== PROGRESS SHEET ===================== */
+function kneeChart(){
+  var W=320,H=150,pl=24,pr=10,pt=10,pb=24, N=30, today=todayKey(), pts=[];
+  for(var i=0;i<N;i++){var kk=shiftKey(today,-(N-1-i)), r=state.knee[kk]&&state.knee[kk].r; if(r) pts.push([i,r,kk]);}
+  var x=function(i){return pl+i*(W-pl-pr)/(N-1)}, y=function(r){return pt+(5-r)*(H-pt-pb)/4};
+  var s='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Knee comfort over the last 30 days">';
+  for(var r=1;r<=5;r++) s+='<line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+y(r)+'" y2="'+y(r)+'" stroke="#EEE9E0" stroke-width="1"/><text x="'+(pl-8)+'" y="'+(y(r)+4)+'" font-size="10" text-anchor="end" fill="#8A9497" font-weight="700">'+r+'</text>';
+  [0,15,29].forEach(function(i){s+='<text x="'+x(i)+'" y="'+(H-6)+'" font-size="10" text-anchor="'+(i===0?'start':i===29?'end':'middle')+'" fill="#8A9497" font-weight="600">'+(i===29?'Today':short(shiftKey(today,-(N-1-i))))+'</text>'});
+  if(pts.length>1) s+='<polyline points="'+pts.map(function(p){return x(p[0])+','+y(p[1])}).join(' ')+'" fill="none" stroke="#0F7A70" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" opacity=".55"/>';
+  pts.forEach(function(p){s+='<circle cx="'+x(p[0])+'" cy="'+y(p[1])+'" r="5" fill="'+KNEE[p[1]].c+'" stroke="#fff" stroke-width="2"><title>'+short(p[2])+': '+p[1]+'/5</title></circle>'});
+  if(!pts.length) s+='<text x="'+(W/2)+'" y="'+(H/2)+'" text-anchor="middle" font-size="12" fill="#8A9497" font-weight="600">Rate your knees each day to see the trend</text>';
+  return s+'</svg>';
+}
+function spark(h){
+  if(h.length<2) return '';
+  var v=h.slice(-10).map(function(x){return x[1]}), mx=Math.max.apply(0,v), mn=Math.min.apply(0,v), W=64,H=22;
+  return '<svg width="'+W+'" height="'+H+'"><polyline points="'+v.map(function(a,i){return (i*(W-4)/(v.length-1)+2)+','+(H-3-(mx===mn?.5:(a-mn)/(mx-mn))*(H-6))}).join(' ')+'" fill="none" stroke="#0F7A70" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+}
+function summaryText(){
+  var today=todayKey(), lines=['Velor Board — knee comfort log','(1 = very sore, 5 = feels great)',''];
+  for(var i=29;i>=0;i--){var kk=shiftKey(today,-i), o=state.knee[kk], dn=doneOn(kk).length;
+    if((o&&(o.r||o.n))||dn) lines.push(nice(kk)+': '+(o&&o.r?o.r+'/5 ('+KNEE[o.r].t.toLowerCase()+')':'not rated')+(dn?' · '+dn+' exercise'+(dn===1?'':'s'):'')+(o&&o.n?' — '+o.n:''));}
+  var a=kneeAvg(0,7), b=kneeAvg(7,7);
+  lines.push(''); if(a) lines.push('Last 7 days average: '+a.toFixed(1)+'/5'+(b?' (previous 7 days: '+b.toFixed(1)+'/5)':''));
+  var days=0; for(var j=0;j<30;j++) if(doneOn(shiftKey(today,-j)).length) days++;
+  lines.push('Exercised on '+days+' of the last 30 days.');
+  return lines.join('\n');
+}
+function copySummary(btn){
+  var txt=summaryText(), ta=document.getElementById('copyout');
+  var ok=function(){btn.textContent='Copied ✓';};
+  var fail=function(){if(ta){ta.style.display='block'; ta.value=txt; ta.focus(); ta.select();} btn.textContent='Select the text below and copy';};
+  try{navigator.clipboard.writeText(txt).then(ok,fail)}catch(e){fail()}
+}
+function openProgress(){
+  ui.open=null; ui.progress=true; cur=null; stopAnim(); stopTimer();
+  var a=kneeAvg(0,7), b=kneeAvg(7,7), trend='';
+  if(a&&b){var d=a-b; trend=Math.abs(d)<0.15?'About the same as the week before.':(d>0?'▲ Up '+d.toFixed(1)+' from the week before — knees feeling better.':'▼ Down '+Math.abs(d).toFixed(1)+' from the week before.');}
+  else if(a) trend='7-day average: '+a.toFixed(1)+'/5. Keep rating daily to compare weeks.';
+  var h='<div class="shbar"><div class="grow" style="text-align:left;padding-left:4px">Progress</div><button class="iconbtn" data-act="close" aria-label="Close">'+XI+'</button></div><div class="dbody" style="padding-top:0">';
+  h+='<div class="box chart"><div class="boxttl">Knee comfort · last 30 days</div>'+kneeChart()+(trend?'<div class="trend">'+trend+'</div>':'')+'</div>';
+  h+='<div class="box"><div class="boxttl">For your doctor or PT</div><div style="font-size:14.5px;line-height:1.45;margin-bottom:10px">Copy a plain-text summary of your last 30 days — ratings, notes and workout days — to paste into a message or show at an appointment.</div><button class="btn dark" style="width:100%" data-act="copy">Copy summary</button><textarea class="copyout" id="copyout" readonly></textarea></div>';
+  var logged=EX.filter(function(e){return history(e.id).length});
+  h+='<div class="box plist"><div class="boxttl">Getting stronger</div>';
+  if(!logged.length) h+='<div style="font-size:14.5px;color:var(--muted);line-height:1.45">Open any exercise and log your best set (or longest hold). Hit the top of the range three sessions in a row and you’ll get a level-up suggestion.</div>';
+  logged.forEach(function(e){var hh=history(e.id), last=hh[hh.length-1][1], pb=hh.reduce(function(m,x){return Math.max(m,x[1])},0), lv=levelInfo(e);
+    h+='<button class="pi" style="width:100%;text-align:left" data-act="openx" data-id="'+e.id+'"><span class="thumb">'+thumbSvg(e)+'</span><span class="grow"><b>'+e.name+(lv&&lv.ready?'<span class="lvl">⬆ LEVEL UP</span>':'')+'</b><span>Last '+last+' · best '+pb+' '+(e.unit==='sec'?'sec':e.unit)+' · goal '+e.lo+'–'+e.hi+'</span></span>'+spark(hh)+'</button>';});
+  h+='</div></div>';
+  sheet.innerHTML=h; sheet.scrollTop=0; showSheet();
+}
+function openTips(){
+  ui.open=null; ui.progress=false; cur=null; stopAnim();
+  var h='<div class="shbar"><div class="grow" style="text-align:left;padding-left:4px">From the book · Chapter 6</div><button class="iconbtn" data-act="close" aria-label="Close">'+XI+'</button></div>';
+  h+='<div class="dbody tips"><h2>Tips for best results</h2>'+
+  '<h3>Breathing &amp; technique</h3><ul><li>Start tall with a neutral spine — don’t hunch forward.</li><li>Inhale deeply through the nose as you prepare for the stretch.</li><li>Exhale slowly as you sink deeper into the stretch.</li><li>Avoid bouncing; keep all movements smooth and controlled.</li><li>Hold onto a chair, table, etc. for balance and control.</li></ul>'+
+  '<h3>Time &amp; sets</h3><ul><li>Stretches work best held for 30+ seconds.</li><li>Do 2–3 sets of each stretch or exercise, resting 15–45 seconds between sets.</li><li>5–10 minutes a day is enough to feel a noticeable improvement.</li></ul>'+
+  '<h3>You don’t need every exercise daily</h3><ul><li>Treat the exercises as interchangeable tools — choose based on your goals or how your body feels that day.</li><li>Consistency beats volume: a few focused exercises done well outperform a long, rushed session.</li></ul>'+
+  '<h3>Picks by goal</h3><ul><li><b>Knee strength &amp; pain relief:</b> mix calf + quad/hamstring exercises, 2–3 exercises total, 2–3 sets each.</li><li><b>Tight calves &amp; ankles:</b> choose 2–3 from Calves &amp; Ankles.</li><li><b>Overall lower-body mobility:</b> rotate through 3–4 different exercises, 3–5 times per week.</li><li><b>Injury prevention &amp; balance:</b> short daily sessions (5 minutes) focusing on calves, hamstrings, and knees.</li></ul>'+
+  '<div class="warn">The Velor Board is for general fitness, not a medical device. Check with your doctor or physical therapist first if you have injuries, medical conditions, or prior surgery. Use it on a flat, stable surface, and stay within the weight limit for your board model.</div></div>';
+  sheet.innerHTML=h; sheet.scrollTop=0; showSheet();
+}
+
+/* ===================== GUIDED WORKOUT ===================== */
+var wo=document.getElementById('wo');
+function startWorkout(){
+  closeSheet();
+  var k=selKey(), ids=planFor(k).ids, first=0;
+  for(var i=0;i<ids.length;i++){if(!isDone(k,ids[i])){first=i;break;} if(i===ids.length-1) first=0;}
+  ui.wo={k:k,ids:ids,i:first,fin:false}; renderWorkout(true);
+}
+function woInner(){
+  var w=ui.wo, e=EXBYID[w.ids[w.i]], k=w.k;
+  return '<div class="dbody" style="padding-top:12px"><span class="chip" style="background:'+grp(e.g).soft+';color:'+grp(e.g).col+'">'+grp(e.g).short.toUpperCase()+'</span><h2>'+e.name+'</h2>'+doseBlock(e)+setsBlock(e,k)+bestBlock(e,k)+infoBlock(e)+'</div>';
+}
+function renderWorkout(fresh){
+  var w=ui.wo; if(!w){wo.classList.remove('on'); return;}
+  document.body.style.overflow='hidden'; wo.classList.add('on');
+  var k=w.k, dn=w.ids.filter(function(id){return isDone(k,id)}).length;
+  if(w.fin){
+    stopAnim(); stopTimer();
+    wo.innerHTML='<div class="inner"><div class="fin"><div class="big">🎉</div><h2>Workout complete</h2><p>'+dn+' of '+w.ids.length+' exercises done '+dayWord(k)+'.</p>'+
+      '<div class="card" style="text-align:left"><h3>How do your knees feel now?</h3>'+scaleHtml(k)+'</div>'+
+      '<button class="btn dark" style="width:100%;margin-top:6px" data-act="wexit">Done</button></div></div>';
+    return;
+  }
+  var e=EXBYID[w.ids[w.i]], last=w.i===w.ids.length-1;
+  wo.innerHTML='<div class="wbar"><button class="iconbtn" data-act="wexit" aria-label="End workout">'+XI+'</button><div class="wprog"><i style="width:'+((w.i)/w.ids.length*100)+'%"></i></div><span class="wn">'+(w.i+1)+' of '+w.ids.length+'</span></div>'+
+    '<div class="inner">'+stageHtml(e)+'<div id="winner">'+woInner()+'</div></div>'+
+    '<div class="wfoot"><div class="in"><button class="btn line" style="flex:0 0 auto;padding:15px 18px" data-act="wprev"'+(w.i===0?' disabled style="opacity:.4;flex:0 0 auto;padding:15px 18px"':'')+' aria-label="Previous">'+LI+'</button>'+
+    '<button class="btn dark" data-act="wnext">'+(isDone(k,e.id)?'':'Mark done & ')+(last?'finish':'next')+' '+RI+'</button></div></div>';
+  if(fresh!==false) wo.scrollTop=0;
+  startAnim(e);
+}
+function rerenderWo(){var el=document.getElementById('winner'); if(el) el.innerHTML=woInner(); var w=ui.wo, e=EXBYID[w.ids[w.i]], nb=wo.querySelector('[data-act="wnext"]'); if(nb) nb.innerHTML=(isDone(w.k,e.id)?'':'Mark done & ')+(w.i===w.ids.length-1?'finish':'next')+' '+RI;}
+function exitWorkout(){ui.wo=null; stopAnim(); stopTimer(); wo.classList.remove('on'); wo.innerHTML=''; document.body.style.overflow=''; render(); if(pending){clearTimeout(pubTimer); pubTimer=setTimeout(flush,800);}}
+wo.addEventListener('click',function(ev){
+  var t=ev.target.closest('[data-act]'); if(!t||!ui.wo) return;
+  var a=t.dataset.act, w=ui.wo, k=w.k, e=EXBYID[w.ids[w.i]];
+  if(a==='wexit') return exitWorkout();
+  if(a==='knee'){setKnee(k,+t.dataset.v); renderWorkout(false); render(); return;}
+  if(a==='wprev'&&w.i>0){w.i--; stopTimer(); renderWorkout(); return;}
+  if(a==='wnext'){ if(!isDone(k,e.id)) toggle(e.id,k); stopTimer(); render();
+    if(w.i<w.ids.length-1){w.i++;} else {w.fin=true;} renderWorkout(); return;}
+  if(a==='goto') return;
+  trainingAction(a,t,e,k,rerenderWo);
+});
+
+/* ===================== BOOT ===================== */
+render();
+if(ui.wo&&ui.wo.ids){renderWorkout(false);} else if(ui.progress) openProgress(); else if(ui.open) openEx(ui.open);
+if(window.__restoreScroll) setTimeout(function(){window.scrollTo(0,window.__restoreScroll)},0);
+try{sessionStorage.removeItem('velor-ui')}catch(e){}
+(function(){var n=new Date(), m=new Date(n.getFullYear(),n.getMonth(),n.getDate()+1,0,0,5); setTimeout(function(){render(); setInterval(render,86400000)}, m-n);})();
+if(window.claude&&window.claude.use){
+  window.claude.use('artifact').then(function(a){artifactApi=a;}).catch(function(){});
+} else if(window.self===window.top&&'serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
+  // installed/stand-alone app: add the web-app manifest and offline cache
+  try{var lk=document.createElement('link'); lk.rel='manifest'; lk.href='manifest.webmanifest'; document.head.appendChild(lk);
+    var tc=document.createElement('meta'); tc.name='theme-color'; tc.content='#0F6A61'; document.head.appendChild(tc);
+    var ai=document.createElement('link'); ai.rel='apple-touch-icon'; ai.href='icons/icon-192.png'; document.head.appendChild(ai);
+    navigator.serviceWorker.register('sw.js').catch(function(){});}catch(e){}
+}
+window.__velor={EX:EX,POSES:POSES,sceneSvg:sceneSvg,state:function(){return state},buildDoc:buildDoc,planFor:planFor};
+})();
+</script>
+</body>
+</html>
